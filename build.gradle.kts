@@ -2,7 +2,11 @@ plugins {
     kotlin("multiplatform") version "1.4.31"
     id("com.android.application")
     id("kotlin-android-extensions")
+    id("maven-publish")
 }
+
+val libName = "SharedLibrary"
+val cocoaDestination = "https://github.com/feliperce/SharedLibrary-Cocoa"
 
 group = "me.felipe"
 version = "1.0-SNAPSHOT"
@@ -42,24 +46,25 @@ kotlin {
 
     
     android()
+
     iosX64 {
         binaries {
             framework {
-                baseName = "library"
+                baseName = libName
             }
         }
     }
     iosArm64 {
         binaries {
             framework {
-                baseName = "library"
+                baseName = libName
             }
         }
     }
     iosArm32 {
         binaries {
             framework {
-                baseName = "library"
+                baseName = libName
             }
         }
     }
@@ -103,6 +108,21 @@ kotlin {
         val iosArm32Main by getting
         val iosArm32Test by getting
     }
+
+    tasks {
+        register("universalFrameworkDebug", org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask::class) {
+            baseName = libName
+            from(
+                iosArm64().binaries.getFramework(libName, "Debug"),
+                iosX64().binaries.getFramework(libName, "Debug")
+            )
+            destinationDir = buildDir.resolve(cocoaDestination)
+            group = libName
+            description = "Debug lib for iOS"
+            dependsOn("link${libName}DebugFrameworkIosArm64")
+            dependsOn("link${libName}DebugFrameworkIosX64")
+        }
+    }
 }
 
 android {
@@ -114,3 +134,5 @@ android {
         targetSdkVersion(29)
     }
 }
+
+
