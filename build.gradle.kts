@@ -8,12 +8,12 @@ plugins {
     id("maven-publish")
 }
 
-val libName = "SharedLibrary"
-val libVersionName = "1.0.0"
-val cocoaDestination = "https://github.com/feliperce/SharedLibrary-Cocoa"
+val libName = "HNFoundation"
+val libVersionName = "1.0.3"
+val cocoaDestination = "$rootDir/../../hn-foundation-cocoa"
 
 group = "me.felipe"
-version = "1.0-SNAPSHOT"
+version = libVersionName
 
 repositories {
     google()
@@ -136,14 +136,14 @@ kotlin {
             )
             destinationDir = buildDir.resolve(cocoaDestination)
             group = libName
-            description = "Create the debug fat framework for iOs"
+            description = "Create the debug fat framework for ihhhOs"
             dependsOn("link${libName}ReleaseFrameworkIosArm64")
             dependsOn("link${libName}ReleaseFrameworkIosX64")
         }
 
         // Faz o Build e push para ios DEV
         register("publishDevFramework") {
-            description = "Publish iOs framweork to the Cocoa Repo"
+            description = "Publish iOs framework to the Cocoa Repo"
 
             project.exec {
                 workingDir = File(cocoaDestination)
@@ -230,7 +230,7 @@ kotlin {
                     }
 
                     project.exec {
-                        workingDir = File("$rootDir/../../hn-foundation-cocoa")
+                        workingDir = File(cocoaDestination)
                         commandLine("git", "push", "origin", "master", "--tags").standardOutput
                     }
                 }
