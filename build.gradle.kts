@@ -75,6 +75,10 @@ kotlin {
         binaries.framework(libName)
     }
 
+    js {
+        browser()
+    }
+
     version = libVersionName
 
     sourceSets {

@@ -5,9 +5,16 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class OnboardingApi {
+
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Default+job)
 
     companion object {
         private const val BASE_URL = "https://dev-onboardings.vidaas.com.br/api/v1/enrolls/"
@@ -24,16 +31,18 @@ class OnboardingApi {
         }
     }
 
-    suspend fun sendEnroll(definition: String, onResult: (SendEnrollResponse) -> Unit) {
-        val result = httpClient.post<SendEnrollResponse> {
-            url(BASE_URL)
-            headers {
-                append("Content-Type", "application/json")
+    fun sendEnroll(definition: String, onResult: (SendEnrollResponse) -> Unit) {
+        scope.launch {
+            val result = httpClient.post<SendEnrollResponse> {
+                url(BASE_URL)
+                headers {
+                    append("Content-Type", "application/json")
+                }
+                body = SendEnrollRequest(definition)
             }
-            body = SendEnrollRequest(definition)
-        }
 
-        onResult(result)
+            onResult(result)
+        }
     }
 
     suspend fun sendEnrollAndWait(definition: String): SendEnrollResponse {
