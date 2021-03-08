@@ -17,8 +17,8 @@ repositories {
 
 val libName = "HNFoundation"
 val libGroup = "com.prof18.hn.foundation"
-val libVersionName = "1.0.2"
-val libVersionCode = 10002
+val libVersionName = "1.0.3"
+val libVersionCode = 10003
 
 group = libGroup
 version = libVersionName
