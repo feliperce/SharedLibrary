@@ -1,4 +1,4 @@
 data class Dados(
-    private val id: Long,
-    private val name: String
+    private val id: Long = 1000,
+    private val name: String = "jdsaijdasjidjsai"
 )
