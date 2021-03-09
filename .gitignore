@@ -1,3 +1,15 @@
 .gradle/
 .idea/
 build/
+
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/local.properties
+
+/shelf/
+/workspace.xml
+
