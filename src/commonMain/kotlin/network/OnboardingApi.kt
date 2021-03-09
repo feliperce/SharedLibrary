@@ -31,6 +31,7 @@ class OnboardingApi {
         }
     }
 
+    @Throws(Exception::class)
     fun sendEnroll(definition: String, onResult: (SendEnrollResponse) -> Unit) {
         scope.launch {
             val result = httpClient.post<SendEnrollResponse> {
