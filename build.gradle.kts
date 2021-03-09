@@ -17,8 +17,8 @@ repositories {
 
 val libName = "HNFoundation"
 val libGroup = "com.prof18.hn.foundation"
-val libVersionName = "1.0.3"
-val libVersionCode = 10003
+val libVersionName = "1.0.5"
+val libVersionCode = 10005
 
 val ktorVersion = "1.4.0"
 val coroutinesVersion = "1.3.9-native-mt"
@@ -76,7 +76,23 @@ kotlin {
     }
 
     js {
-        browser()
+        browser {
+            webpackTask {
+                cssSupport.enabled = true
+            }
+
+            runTask {
+                cssSupport.enabled = true
+            }
+
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    webpackConfig.cssSupport.enabled = true
+                }
+            }
+        }
+        binaries.executable()
     }
 
     version = libVersionName
@@ -113,9 +129,7 @@ kotlin {
         }
         val iosTest by getting
         val jvmMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-js:$ktorVersion")
-            }
+
         }
         val jvmTest by getting
         val jsMain by getting {

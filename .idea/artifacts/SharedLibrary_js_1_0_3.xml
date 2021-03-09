@@ -1,6 +1,8 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="SharedLibrary-js-1.0.3">
     <output-path>$PROJECT_DIR$/build/libs</output-path>
-    <root id="archive" name="SharedLibrary-js-1.0.3.jar" />
+    <root id="archive" name="SharedLibrary-js-1.0.3.jar">
+      <element id="module-output" name="SharedLibrary.jsMain" />
+    </root>
   </artifact>
 </component>
