@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform") version "1.4.0"
     id("kotlin-android-extensions")
     id("maven-publish")
+    kotlin("plugin.serialization") version "1.4.21"
 }
 
 repositories {
@@ -17,8 +18,8 @@ repositories {
 
 val libName = "HNFoundation"
 val libGroup = "com.prof18.hn.foundation"
-val libVersionName = "1.0.5"
-val libVersionCode = 10005
+val libVersionName = "1.0.7"
+val libVersionCode = 10007
 
 val ktorVersion = "1.4.0"
 val coroutinesVersion = "1.3.9-native-mt"
@@ -75,7 +76,7 @@ kotlin {
         binaries.framework(libName)
     }
 
-    js {
+    /*js {
         browser {
             webpackTask {
                 cssSupport.enabled = true
@@ -93,6 +94,18 @@ kotlin {
             }
         }
         binaries.executable()
+    }*/
+
+    publishing {
+        publications {
+            val debugLibrary = "sharedlibrary"
+            register(debugLibrary, MavenPublication::class) {
+                from(components["kotlin"])
+                groupId = "com.example"
+                artifactId = debugLibrary
+                version = "0.0.3"
+            }
+        }
     }
 
     version = libVersionName
@@ -132,11 +145,11 @@ kotlin {
 
         }
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
+        /*val jsMain by getting {
+            *//*dependencies {
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
-            }
-        }
+            }*//*
+        }*/
     }
 
     tasks {

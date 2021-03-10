@@ -1,14 +1,12 @@
 package network
 
+import co.touchlab.stately.ensureNeverFrozen
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 
 class OnboardingApi {
@@ -18,6 +16,10 @@ class OnboardingApi {
 
     companion object {
         private const val BASE_URL = "https://dev-onboardings.vidaas.com.br/api/v1/enrolls/"
+    }
+
+    init {
+        //ensureNeverFrozen()
     }
 
     private val httpClient = HttpClient {
@@ -32,17 +34,22 @@ class OnboardingApi {
     }
 
     @Throws(Exception::class)
-    fun sendEnroll(definition: String, onResult: (SendEnrollResponse) -> Unit) {
+    fun sendEnroll(definition: String, onResult: (SendEnrollResponse) -> Unit)  {
         scope.launch {
-            val result = httpClient.post<SendEnrollResponse> {
-                url(BASE_URL)
-                headers {
-                    append("Content-Type", "application/json")
+            val result = withContext(Dispatchers.Default) {
+                httpClient.post<SendEnrollResponse> {
+                    url(BASE_URL)
+                    headers {
+                        append("Content-Type", "application/json")
+                    }
+
+                    body = SendEnrollRequest(definition)
                 }
-                body = SendEnrollRequest(definition)
             }
 
-            onResult(result)
+            withContext(Dispatchers.Main) {
+                onResult(result)
+            }
         }
     }
 
